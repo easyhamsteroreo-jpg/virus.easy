@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<!-- saved from url=(0063)file:///C:/Users/easyh/Downloads/gemini-code-1782055790835.html -->
-<html lang="ru"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
     <title>Easy Bober Cyber Security v1.0</title>
     <style>
         * { box-sizing: border-box; }
         body, html {
             background-color: #0a0f1d;
             color: #00ffcc;
-            font-family: 'Courier New', Courier, monospace;
+            font-family: 'Segoe UI', -apple-system, sans-serif;
             margin: 0;
             padding: 0;
             width: 100%;
@@ -25,6 +25,7 @@
             height: 100%;
         }
 
+        /* 1. ИНТЕРФЕЙС АНТИВИРУСА */
         .window {
             width: 750px;
             background: #111827;
@@ -34,7 +35,6 @@
             overflow: hidden;
             z-index: 10;
         }
-
         .header {
             background: #1f2937;
             padding: 12px 20px;
@@ -43,13 +43,11 @@
             align-items: center;
             border-bottom: 2px solid #00ffcc;
         }
-
-        .title { font-weight: bold; letter-spacing: 1px; }
+        .title { font-weight: bold; letter-spacing: 1px; font-family: monospace; }
         .dots span { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-left: 5px; }
         .dot-1 { background: #ef4444; }
         .dot-2 { background: #eab308; }
         .dot-3 { background: #22c55e; }
-
         .content {
             padding: 40px;
             text-align: center;
@@ -59,7 +57,6 @@
             justify-content: center;
             align-items: center;
         }
-
         .btn {
             background: transparent;
             color: #00ffcc;
@@ -72,25 +69,9 @@
             text-transform: uppercase;
             letter-spacing: 2px;
         }
-
-        .btn:hover {
-            background: #00ffcc;
-            color: #0a0f1d;
-            box-shadow: 0 0 20px #00ffcc;
-        }
-
-        .btn-danger {
-            color: #ff3366;
-            border-color: #ff3366;
-            margin-top: 20px;
-        }
-        .btn-danger:hover {
-            background: #ff3366;
-            color: #fff;
-            box-shadow: 0 0 20px #ff3366;
-        }
-
-        /* Сканирование */
+        .btn:hover { background: #00ffcc; color: #0a0f1d; box-shadow: 0 0 20px #00ffcc; }
+        .btn-danger { color: #ff3366; border-color: #ff3366; margin-top: 20px; }
+        .btn-danger:hover { background: #ff3366; color: #fff; box-shadow: 0 0 20px #ff3366; }
         #scan-screen { display: none; }
         .radar {
             width: 90px;
@@ -105,27 +86,18 @@
             70% { transform: scale(1); box-shadow: 0 0 0 15px rgba(0, 255, 204, 0); }
             100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 255, 204, 0); }
         }
-
-        .file-log { font-size: 14px; color: #8892b0; margin-top: 15px; }
-
-        /* Экран опасности */
+        .file-log { font-size: 14px; color: #8892b0; margin-top: 15px; font-family: monospace; }
         #alert-screen { display: none; color: #ff3366; }
-        .alert-title { font-size: 32px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
+        .alert-title { font-size: 32px; font-weight: bold; text-transform: uppercase; }
 
-        /* КРИТИЧЕСКИЙ СБОЙ / СКРИМЕР ЭКРАН */
+        /* 2. СКРИМЕР-ВСПЫШКА */
         #scary-glitch {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
             background: #000;
             z-index: 999;
-            color: #fff;
-            font-family: monospace;
-            padding: 50px;
-            font-size: 24px;
-            overflow: hidden;
         }
-        
         .glitch-text {
             color: #ff0000;
             font-size: 50px;
@@ -134,120 +106,279 @@
             animation: shake 0.1s infinite;
             text-align: center;
             margin-top: 20%;
+            font-family: monospace;
         }
         @keyframes shake {
-            0% { transform: translate(2px, 1px) rotate(0deg); }
-            10% { transform: translate(-1px, -2px) rotate(-1deg); }
-            20% { transform: translate(-3px, 0px) rotate(1deg); }
-            30% { transform: translate(0px, 2px) rotate(0deg); }
-            40% { transform: translate(1px, -1px) rotate(1deg); }
-            50% { transform: translate(-1px, 2px) rotate(-1deg); }
-            60% { transform: translate(-3px, 1px) rotate(0deg); }
-            70% { transform: translate(2px, 1px) rotate(-1deg); }
-            80% { transform: translate(-1px, -1px) rotate(1deg); }
-            95% { transform: translate(1px, 2px) rotate(0deg); }
+            0% { transform: translate(2px, 1px); }
+            50% { transform: translate(-2px, 2px); }
+            100% { transform: translate(1px, -1px); }
         }
 
-        /* WINDOWS 11 BSOD ЭКРАН */
+        /* 3. WINDOWS 11 BSOD */
         #bsod-screen {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
-            background-color: #000000; /* В Win 11 изначально экран стал черным, затем вернули синий. Сделаем строгий темно-синий #00469b */
             background: #00469b;
             color: #ffffff;
-            font-family: 'Segoe UI', -apple-system, sans-serif;
             padding: 10% 12%;
             z-index: 1000;
-            box-sizing: border-box;
         }
-
         .sad-face { font-size: 130px; line-height: 120px; margin-bottom: 30px; font-weight: 300; }
         .bsod-text { font-size: 22px; line-height: 32px; margin-bottom: 40px; max-width: 900px; font-weight: 300; }
         .bsod-info { display: flex; align-items: center; gap: 30px; margin-top: 40px; }
         .qr-code { width: 130px; height: 130px; background: #fff; padding: 5px; display: flex; align-items: center; justify-content: center; }
-        .qr-inner { width: 120px; height: 120px; background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 29 29" fill="black"><path d="M0 0h9v9H0zm2 2v5h5V2zm18-2h9v9h-9zm2 2v5h5V2zM0 20h9v9H0zm2 2v5h5V2sM12 2h2v2h-2zm3 4h2v2h-2zm-3 5h4v2h-4zm5 3h3v2h-3zm-5 4h2v5h-2zm5 2h4v2h-4zm3-12h2v2h-2zm-1 5h3v2h-3zm-4 4h2v2h-2zm5 1h2v4h-2z"/></svg>') no-null; background-size: cover; }
-        .info-links { font-size: 15px; line-height: 22px; font-weight: 400; color: #e0e0e0; }
+        .qr-inner { width: 120px; height: 120px; background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 29 29" fill="black"><path d="M0 0h9v9H0zm2 2v5h5V2zm18-2h9v9h-9zm2 2v5h5V2zM0 20h9v9H0zm2 2v5h5V2sM12 2h2v2h-2zm3 4h2v2h-2zm-3 5h4v2h-4zm5 3h3v2h-3zm-5 4h2v5h-2zm5 2h4v2h-4zm3-12h2v2h-2zm-1 5h3v2h-3zm-4 4h2v2h-2zm5 1h2v4h-2z"/></svg>'); background-size: cover; }
+        .info-links { font-size: 15px; line-height: 22px; color: #e0e0e0; }
+
+        /* 4. ТЕМНЫЙ ЭКРАН ВХОДА WINDOWS 11 */
+        #login-screen {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: radial-gradient(circle, #181818 0%, #050505 100%);
+            color: #fff;
+            z-index: 1001;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .user-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: #222;
+            border: 2px solid #ff3366;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50px;
+            box-shadow: 0 0 20px rgba(255, 51, 102, 0.3);
+        }
+        .username { font-size: 28px; font-weight: 400; margin-bottom: 25px; color: #ff3366; text-shadow: 0 0 10px rgba(255,51,102,0.5); letter-spacing: 1px;}
+        .password-box { position: relative; display: flex; align-items: center; }
+        .password-input {
+            width: 260px;
+            padding: 10px 15px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-bottom: 2px solid #ff3366;
+            color: #fff;
+            font-size: 16px;
+            outline: none;
+            text-align: center;
+            letter-spacing: 3px;
+        }
+        .password-submit {
+            background: transparent;
+            border: none;
+            color: #ff3366;
+            font-size: 20px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        /* 5. МРАЧНЫЙ РАБОЧИЙ СТОЛ */
+        #desktop-screen {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #000000;
+            z-index: 1002;
+            padding: 40px;
+        }
+        .icons-grid { display: flex; flex-direction: column; gap: 40px; width: 110px; }
+        .icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            cursor: pointer;
+            width: 100px;
+        }
+        .icon-image {
+            width: 55px;
+            height: 55px;
+            background: #ff3366;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            box-shadow: 0 0 15px #ff3366;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 26px;
+            color: #000;
+        }
+        .icon-label { font-size: 13px; color: #ff3366; font-weight: 600; text-shadow: 0 0 5px #000; font-family: monospace; }
+
+        /* ОШИБКА EASY BOBER (КЛАССИЧЕСКОЕ ОКНО СБОЯ) */
+        .error-popup {
+            display: none;
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 380px;
+            background: #1a1a1a;
+            border: 2px solid #ff3366;
+            box-shadow: 0 0 25px rgba(255, 51, 102, 0.4);
+            color: #fff;
+            z-index: 1010;
+        }
+        .error-header { background: #ff3366; color: #000; padding: 8px 12px; font-weight: bold; display: flex; justify-content: space-between; font-size: 14px; }
+        .error-body { padding: 25px 20px; display: flex; align-items: center; gap: 15px; font-size: 15px; }
+        .error-icon { font-size: 30px; color: #ff3366; }
+        .error-footer { padding: 10px; text-align: right; background: #111; }
+        .btn-ok { background: #ff3366; color: #000; border: none; padding: 6px 25px; font-weight: bold; cursor: pointer; font-family: inherit; }
+        .btn-ok:hover { background: #fff; }
+
+        /* ОКНО ТАЙМЕРА САМОУНИЧТОЖЕНИЯ */
+        .destroy-window {
+            display: none;
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 450px;
+            background: #000;
+            border: 3px double #ff0000;
+            box-shadow: 0 0 40px #ff0000;
+            color: #ff0000;
+            padding: 30px;
+            text-align: center;
+            z-index: 1015;
+            font-family: monospace;
+        }
+        .countdown { font-size: 70px; font-weight: bold; margin: 20px 0; text-shadow: 0 0 15px #ff0000; }
+
+        /* 6. КРАСНЫЙ ЭКРАН СМЕРТИ (RSOD) */
+        #rsod-screen {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #8b0000; /* Глубокий темно-красный */
+            color: #ffffff;
+            padding: 10% 12%;
+            z-index: 1020;
+        }
     </style>
 </head>
 <body>
 
-<div class="flex-center" id="app-wrapper" style="display: none;">
-    <div class="window" id="main-window" style="border-color: rgb(255, 51, 102); box-shadow: rgba(255, 51, 102, 0.5) 0px 0px 40px;">
+<!-- Слой 1: Антивирус -->
+<div class="flex-center" id="app-wrapper">
+    <div class="window" id="main-window">
         <div class="header">
             <div class="title">🦫 EASY BOBER cyber_shield_v1.0</div>
-            <div class="dots">
-                <span class="dot-1"></span>
-                <span class="dot-2"></span>
-                <span class="dot-3"></span>
-            </div>
+            <div class="dots"><span class="dot-1"></span><span class="dot-2"></span><span class="dot-3"></span></div>
         </div>
-
         <div class="content">
-            <!-- Экран 1: Старт -->
-            <div id="start-screen" style="display: none;">
+            <div id="start-screen">
                 <h2 style="margin-bottom: 30px; color: #fff;">Система находится под угрозой.</h2>
                 <button class="btn" onclick="startScanning()">Запустить анализ</button>
             </div>
-
-            <!-- Экран 2: Процесс сканирования -->
-            <div id="scan-screen" style="display: none;">
+            <div id="scan-screen">
                 <div class="radar"></div>
                 <h3>Анализ системных директорий...</h3>
-                <div class="file-log" id="file-log">ВНИМАНИЕ: Обнаружена модификация ядра!</div>
+                <div class="file-log" id="file-log">Подключение к ядру системы...</div>
             </div>
-
-            <!-- Экран 3: Угроза найдена -->
-            <div id="alert-screen" style="display: block;">
+            <div id="alert-screen">
                 <div class="alert-title">⚠️ НАЙДЕН КРИТИЧЕСКИЙ ВИРУС ⚠️</div>
                 <p style="font-size: 18px; margin: 25px 0; color: #fff;">Файл: <span style="text-decoration: underline; color: #ff3366;">win32.system_corrupt.dll</span></p>
-                <p style="color: #8892b0; font-size: 14px;">Статус: Требуется немедленное удаление для предотвращения краха ОС.</p>
                 <button class="btn btn-danger" onclick="triggerScramer()">ОЧИСТИТЬ СИСТЕМУ</button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- ВСПЫШКА/СКРИМЕР (Будет моргать полсекунды) -->
-<div id="scary-glitch" style="display: none;">
-    <div class="glitch-text">КРИТИЧЕСКАЯ ОШИБКА ДОСТУПА<br>СИСТЕМА УНИЧТОЖЕНА</div>
+<!-- Слой 2: Красная глитч-вспышка -->
+<div id="scary-glitch">
+    <div class="glitch-text">КРИТИЧЕСКАЯ ОШИБКА ДОСТУПА</div>
 </div>
 
-<!-- СИНИЙ ЭКРАН СМЕРТИ WINDOWS 11 -->
-<div id="bsod-screen" style="display: block;">
+<!-- Слой 3: Синий экран Windows 11 -->
+<div id="bsod-screen">
     <div class="sad-face">:(</div>
-    <div class="bsod-text">
-        На вашем устройстве возникла проблема, и его необходимо перезагрузить. Мы лишь собираем некоторую информацию об ошибке, а затем будет автоматически выполнена перезагрузка.
-    </div>
-    <div class="bsod-text" style="font-size: 20px; margin-bottom: 10px;">
-        <span id="progress-percent">100</span>% завершено
-    </div>
-    
+    <div class="bsod-text">На вашем устройстве возникла проблема, и его необходимо перезагрузить...</div>
+    <div class="bsod-text" style="font-size: 20px;"><span id="progress-percent">0</span>% завершено</div>
     <div class="bsod-info">
-        <div class="qr-code">
-            <div class="qr-inner"></div>
-        </div>
+        <div class="qr-code"><div class="qr-inner"></div></div>
         <div class="info-links">
-            При возникновении этой проблемы вы можете вызвать службу поддержки и сообщить следующий код:<br>
-            <span style="font-weight: 600; color: #fff;">КОД ОСТАНОВКИ: CRITICAL_PROCESS_DIED</span><br>
+            КОД ОСТАНОВКИ: CRITICAL_PROCESS_DIED<br>
             Что вызвало проблему: easy_bober_sys.sys
         </div>
     </div>
 </div>
 
+<!-- Слой 4: Экран входа в систему (Локскрин) -->
+<div id="login-screen">
+    <div class="user-avatar">👁️</div>
+    <div class="username">не дай себя найти</div>
+    <div class="password-box">
+        <input type="password" id="pass-field" class="password-input" placeholder="Пароль" autofocus autocomplete="off">
+        <button class="password-submit" onclick="checkPassword()">➔</button>
+    </div>
+    <p id="error-msg" style="color: #ff3366; margin-top: 15px; font-size: 14px; display: none;">Неверный пароль. Попробуйте еще раз.</p>
+</div>
+
+<!-- Слой 5: Чёрный рабочий стол -->
+<div id="desktop-screen">
+    <div class="icons-grid">
+        <!-- Иконка 1: Антивирус -->
+        <div class="icon" onclick="showBoberError()">
+            <div class="icon-image">☠️</div>
+            <div class="icon-label">EasyBober.exe</div>
+        </div>
+        <!-- Иконка 2: Хелп ми -->
+        <div class="icon" onclick="startSelfDestruct()">
+            <div class="icon-image">🫵</div>
+            <div class="icon-label">HELP_ME.txt</div>
+        </div>
+    </div>
+</div>
+
+<!-- Окно ошибки EasyBober.exe -->
+<div class="error-popup" id="bober-error">
+    <div class="error-header">
+        <span>System Error - EasyBober</span>
+        <span style="cursor:pointer;" onclick="closeBoberError()">X</span>
+    </div>
+    <div class="error-body">
+        <span class="error-icon">❌</span>
+        <span>Критический сбой. Переустановите программу.</span>
+    </div>
+    <div class="error-footer">
+        <button class="btn-ok" onclick="closeBoberError()">ОК</button>
+    </div>
+</div>
+
+<!-- Окно приложения Самоуничтожения -->
+<div class="destroy-window" id="destruct-popup">
+    <div style="font-size: 18px; letter-spacing: 2px;">ЗАПУЩЕН ПРОТОКОЛ САМОУНИЧТОЖЕНИЯ</div>
+    <div class="countdown" id="timer-num">10</div>
+    <div style="font-size: 12px; color: #550000;">Крах системы неизбежен...</div>
+</div>
+
+<!-- Слой 6: КРАСНЫЙ ЭКРАН СМЕРТИ (RSOD) -->
+<div id="rsod-screen">
+    <div class="sad-face">:(</div>
+    <div class="bsod-text" style="font-weight: bold; font-size: 26px; text-transform: uppercase; letter-spacing: 1px;">
+        Fatal System Error: HARDWARE_DESTROYED
+    </div>
+    <div class="bsod-text">
+        Обнаружено необратимое повреждение секторов памяти устройства. Дальнейшая работа операционной системы заблокирована во избежание физического уничтожения процессора.
+    </div>
+    <div class="bsod-text" style="font-size: 16px; margin-top: 50px; color: #ff9999; font-family: monospace;">
+        КОД ОСТАНОВКИ: 0x000000EF (CRITICAL_STRUCTURE_CORRUPTION)<br>
+        Процесс: EasyBober.exe уничтожил таблицу разделов.
+    </div>
+</div>
+
 <script>
-    const fakeFiles = [
-        "C:/Windows/System32/kernel32.dll...",
-        "C:/Windows/System32/drivers/etc/hosts...",
-        "Проверка целостности системных разделов...",
-        "Поиск вредоносных сигнатур...",
-        "ВНИМАНИЕ: Обнаружена модификация ядра!"
-    ];
+    const fakeFiles = ["C:/Windows/System32/kernel32.dll...", "Проверка разделов...", "ВНИМАНИЕ: Обнаружена модификация ядра!"];
 
     function startScanning() {
         document.getElementById('start-screen').style.display = 'none';
         document.getElementById('scan-screen').style.display = 'block';
-
         let fileIndex = 0;
         const logElement = document.getElementById('file-log');
 
@@ -257,53 +388,91 @@
                 fileIndex++;
             } else {
                 clearInterval(interval);
-                showDanger();
+                document.getElementById('scan-screen').style.display = 'none';
+                document.getElementById('main-window').style.borderColor = '#ff3366';
+                document.getElementById('alert-screen').style.display = 'block';
             }
         }, 1000);
     }
 
-    function showDanger() {
-        document.getElementById('scan-screen').style.display = 'none';
-        const mainWindow = document.getElementById('main-window');
-        mainWindow.style.borderColor = '#ff3366';
-        mainWindow.style.boxShadow = '0 0 40px rgba(255, 51, 102, 0.5)';
-        document.getElementById('alert-screen').style.display = 'block';
-    }
-
     function triggerScramer() {
-        // 1. Скрываем интерфейс софта
         document.getElementById('app-wrapper').style.display = 'none';
-        
-        // 2. Включаем жуткий красный глитч на 600 миллисекунд (эффект внезапного сбоя)
         const glitch = document.getElementById('scary-glitch');
         glitch.style.display = 'block';
 
         setTimeout(() => {
             glitch.style.display = 'none';
-            // 3. Переключаем на идеальный Windows 11 BSOD
             showBsod();
         }, 600);
     }
 
     function showBsod() {
-        const bsod = document.getElementById('bsod-screen');
-        bsod.style.display = 'block';
-        
-        // Имитация счетчика процентов загрузки на синем экране
+        document.getElementById('bsod-screen').style.display = 'block';
         let percent = 0;
         const percentEl = document.getElementById('progress-percent');
         
         const bsodInterval = setInterval(() => {
             if (percent < 100) {
-                percent += Math.floor(Math.random() * 15) + 5;
+                percent += Math.floor(Math.random() * 25) + 10;
                 if (percent > 100) percent = 100;
                 percentEl.innerText = percent;
             } else {
                 clearInterval(bsodInterval);
+                document.getElementById('bsod-screen').style.display = 'none';
+                setTimeout(() => {
+                    document.getElementById('login-screen').style.display = 'flex';
+                }, 1200);
             }
-        }, 1500);
+        }, 800);
+    }
+
+    function checkPassword() {
+        const input = document.getElementById('pass-field').value;
+        if (input === "22220766") {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('desktop-screen').style.display = 'block';
+        } else {
+            document.getElementById('error-msg').style.display = 'block';
+            document.getElementById('pass-field').value = '';
+        }
+    }
+
+    document.getElementById('pass-field').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') { checkPassword(); }
+    });
+
+    /* --- НОВЫЙ ИНТЕРАКТИВ НА РАБОЧЕМ СТОЛЕ --- */
+
+    // 1. Поведение EasyBober.exe
+    function showBoberError() {
+        document.getElementById('bober-error').style.display = 'block';
+    }
+    function closeBoberError() {
+        document.getElementById('bober-error').style.display = 'none';
+    }
+
+    // 2. Поведение HELP_ME.txt (Самоуничтожение)
+    function startSelfDestruct() {
+        // Открываем окно таймера
+        document.getElementById('destruct-popup').style.display = 'block';
+        
+        let timeLeft = 10;
+        const timerEl = document.getElementById('timer-num');
+        
+        const countdownInterval = setInterval(() => {
+            timeLeft--;
+            timerEl.innerText = timeLeft;
+            
+            if (timeLeft <= 0) {
+                clearInterval(countdownInterval);
+                // Прячем рабочее пространство и выдаем Красный Экран Смерти (RSOD)
+                document.getElementById('destruct-popup').style.display = 'none';
+                document.getElementById('desktop-screen').style.display = 'none';
+                document.getElementById('rsod-screen').style.display = 'block';
+            }
+        }, 1000);
     }
 </script>
 
-
-</body></html>
+</body>
+</html>
